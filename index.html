@@ -862,3 +862,32 @@ function wire(){
     var txt=buildSummary();
     function done(){toast('Summary copied');}
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,function(){fallbackCopy(txt);done();});}
+    else{fallbackCopy(txt);done();}
+  });
+  $('#removeSamplesBtn').addEventListener('click',function(){
+    state.trips=state.trips.filter(function(t){return !t.sample});
+    state.samples=false;save();renderTrips();toast('Sample trips removed');
+  });
+  $('#eraseBtn').addEventListener('click',function(){
+    if(!this.getAttribute('data-arm')){this.setAttribute('data-arm','1');this.textContent='Tap again to erase everything';setTimeout(function(){var b=$('#eraseBtn');if(b){b.removeAttribute('data-arm');b.textContent='Erase everything';}},3500);return;}
+    try{localStorage.removeItem(LS_KEY);localStorage.removeItem('buskit-seen');}catch(e){}
+    state=defaultState();save();fillStops();renderAll();toast('All data erased');
+    this.removeAttribute('data-arm');this.textContent='Erase everything';
+  });
+}
+function fallbackCopy(txt){
+  var ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');}catch(e){}
+  ta.remove();
+}
+
+fillStops();
+renderAll();
+wire();
+runIntro();
+setInterval(function(){tickClock();renderBoard();},30000);
+
+window.BusKit={state:function(){return state},ROUTES:ROUTES,fareFor:fareFor,findRoutes:findRoutes,nextDeparture:nextDeparture,legOn:legOn,renderBoard:renderBoard,renderFinder:renderFinder,renderFare:renderFare,renderPass:renderPass,buildSummary:buildSummary};
+</script>
+</body>
+</html>
