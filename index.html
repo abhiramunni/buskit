@@ -36,3 +36,33 @@ a{color:var(--terra-d)}
 @keyframes drive{from{left:-40%}to{left:100%}}
 #intro h1{font-size:clamp(38px,8vw,64px);font-weight:900;letter-spacing:.01em;opacity:0;animation:rise .8s .2s ease forwards}
 #intro p{font-size:17px;opacity:0;animation:rise .8s .55s ease forwards;color:#e8d5ae}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#intro .prog{width:min(260px,70vw);height:5px;background:rgba(251,243,226,.22);border-radius:5px;overflow:hidden}
+#intro .prog i{display:block;height:100%;width:0;background:#d9a441;border-radius:5px;transition:width .2s}
+#intro .skip{position:absolute;bottom:26px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#e8d5ae;background:rgba(0,0,0,.25);border:1px solid rgba(251,243,226,.35);padding:9px 16px;border-radius:999px}
+/* ---------- header ---------- */
+header.top{position:sticky;top:0;z-index:60;background:rgba(250,246,238,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.top-in{display:flex;align-items:center;gap:12px;padding:12px 0}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.logo .mark{width:40px;height:40px;border-radius:12px;background:linear-gradient(140deg,#b07d2b,#c05b2e);display:grid;place-items:center;box-shadow:var(--shadow)}
+.logo .mark svg{width:24px;height:24px}
+.logo b{font-family:Fraunces,serif;font-size:22px;letter-spacing:.01em}
+.logo span{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink2);font-weight:700}
+.top nav{margin-left:auto;display:flex;gap:4px;flex-wrap:wrap}
+.top nav a{font-size:13.5px;font-weight:600;color:var(--ink2);text-decoration:none;padding:8px 10px;border-radius:999px}
+.top nav a:hover{background:var(--paper2);color:var(--ink)}
+.clock{margin-left:6px;font-size:13px;font-weight:700;background:var(--ink);color:#fbf3e2;padding:8px 12px;border-radius:999px;white-space:nowrap}
+/* ---------- hero ---------- */
+.hero{position:relative;border-radius:0 0 28px 28px;overflow:hidden}
+.hero img{width:100%;height:min(58vh,460px);object-fit:cover;animation:kb 26s ease-in-out infinite alternate}
+@keyframes kb{from{transform:scale(1) translateX(0)}to{transform:scale(1.08) translateX(-1.2%)}}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,12,6,.05) 40%,rgba(20,12,6,.72))}
+.hero .copy{position:absolute;left:0;right:0;bottom:0;padding:28px 22px 26px;color:#fdf8ee}
+.hero .kicker{font-size:12px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:#f2cd7e}
+.hero h1{font-size:clamp(34px,6.4vw,58px);line-height:1.04;font-weight:900;margin:8px 0 8px;max-width:640px}
+.hero p{max-width:560px;font-size:16.5px;color:#f3e8d2}
+.hero .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.chip{background:rgba(250,246,238,.16);border:1px solid rgba(250,246,238,.45);color:#fdf8ee;font-size:13px;font-weight:600;padding:7px 12px;border-radius:999px;backdrop-filter:blur(4px)}
+/* ---------- sections ---------- */
+section.block{padding:30px 0 6px}
+.sec-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:6px}
