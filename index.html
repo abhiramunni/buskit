@@ -599,3 +599,58 @@ function renderBoard(){
   });
   if(!rows.length)html='<div class="empty"><b>No routes serve this stop yet.</b>Pick another stop — the 27 stops in BusKit cover the main corridors.</div>';
   $('#boardRows').innerHTML=html;
+  var ended=rows.filter(function(r){return !nextDeparture(r,now)}).length;
+  $('#boardNote').textContent=ended?ended+' route'+(ended>1?'s have':' has')+' ended for today':'All routes from here are still running';
+}
+
+/* ---- finder ---- */
+function legHtml(leg){
+  return '<b>'+esc(leg.route.no)+'</b> '+esc(leg.from)+' → '+esc(leg.to)+' · '+leg.km+' km · ~'+leg.mins+' min · '+inr(leg.fare);
+}
+function renderFinder(){
+  var from=$('#fromStop').value,to=$('#toStop').value;
+  var when=$('#whenSel').value;
+  var box=$('#findResults');
+  if(from===to){box.innerHTML='<div class="empty"><b>You are already there.</b>Pick a different destination to find a bus.</div>';return;}
+  var opts=findRoutes(from,to);
+  if(!opts.length){box.innerHTML='<div class="empty"><b>No direct bus, and no single change covers it.</b>Try changing at Majestic or KR Market — most routes pass through one of them.</div>';return;}
+  var mult=when==='peak'||when==='evening'?1.25:1;
+  var html='';
+  opts.forEach(function(o,i){
+    var mins=Math.round(o.mins*mult);
+    var ret=o.fare*2;
+    var passNote=ret>=70?'<div class="r-note">A ₹70 day pass covers the return trip too — cheaper than two single tickets.</div>':'';
+    var via=o.kind==='change'?'<span class="r-via">change at '+esc(o.via)+'</span>':'<span class="r-via">direct · no change</span>';
+    var legs=o.legs.map(legHtml).join('<br>');
+    html+='<div class="res'+(i===0?' best':'')+'">'
+      +'<div class="r-top"><span class="r-no">'+esc(from)+' → '+esc(to)+'</span>'+(i===0?'<span class="badge">Fastest</span>':'')+via+'</div>'
+      +'<div class="r-meta"><span>Time <b>~'+mins+' min</b></span><span>Fare <b>'+inr(o.fare)+'</b></span><span>Distance <b>'+o.km+' km</b></span><span>Return <b>'+inr(ret)+'</b></span></div>'
+      +'<div class="r-legs">'+legs+'</div>'+passNote
+      +'<div style="margin-top:10px"><button class="btn small ghost" data-save="'+esc(o.legs[0].route.no)+'|'+esc(from)+'|'+esc(to)+'">Save this route</button></div>'
+      +'</div>';
+  });
+  box.innerHTML=html;
+}
+
+/* ---- fare calculator ---- */
+var fareType='ordinary';
+function renderFare(){
+  var km=parseInt($('#distRange').value,10);
+  $('#distVal').textContent=km;
+  var f=fareFor(km,fareType);
+  $('#fareOut').textContent=f;
+  $('#fareReturn').textContent=f*2;
+  $('#fareNote').textContent=typeLabel(fareType).toLowerCase()+' · '+km+' km';
+  $('#fareStage').textContent=fareType==='airport'?'Flat airport fare':stageLabel(km);
+}
+
+/* ---- pass maths ---- */
+function renderPass(){
+  var trips=parseInt($('#tripsRange').value,10);
+  var avg=parseInt($('#avgFareRange').value,10);
+  $('#tripsVal').textContent=trips;
+  $('#avgFareVal').textContent=avg;
+  var singles=trips*avg*26;
+  $('#singlesOut').textContent=singles.toLocaleString('en-IN');
+  $('#dayPassOut').textContent=(26*70).toLocaleString('en-IN');
+  var best=Math.min(singles,1820,1050);
