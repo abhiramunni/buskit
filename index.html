@@ -654,3 +654,50 @@ function renderPass(){
   $('#singlesOut').textContent=singles.toLocaleString('en-IN');
   $('#dayPassOut').textContent=(26*70).toLocaleString('en-IN');
   var best=Math.min(singles,1820,1050);
+  var v=$('#passVerdict');
+  if(best===1050)v.textContent='Monthly pass — saves '+inr(singles-1050)+' vs single tickets';
+  else if(best===1820)v.textContent='Day passes — saves '+inr(singles-1820)+' vs single tickets';
+  else v.textContent='Single tickets are cheapest for you';
+}
+
+/* ---- saved routes ---- */
+function renderSaved(){
+  var html='';
+  state.saved.forEach(function(s,i){
+    var r=routeByNo(s.routeNo);
+    if(!r)return;
+    var leg=legOn(r,s.from,s.to);
+    if(!leg)return;
+    html+='<div class="sav"><div class="s-route">'+esc(s.from)+' → '+esc(s.to)+'</div>'
+      +'<div class="s-meta">'+esc(r.no)+' · '+esc(typeLabel(r.type))+' · '+leg.km+' km · ~'+leg.mins+' min · '+inr(leg.fare)+'</div>'
+      +'<div class="s-foot"><button class="btn small" data-open-route="'+esc(r.no)+'">View stops</button>'
+      +'<button class="star" data-unsave="'+i+'" title="Remove saved route" aria-label="Remove saved route"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.2 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8z"/></svg></button></div></div>';
+  });
+  if(!state.saved.length)html='<div class="empty" style="flex:1 0 100%"><b>No saved routes yet.</b>Find a route above and save it — it will wait here for tomorrow morning.</div>';
+  $('#savedRail').innerHTML=html;
+}
+
+/* ---- trips log ---- */
+function renderTrips(){
+  var total=state.trips.reduce(function(a,t){return a+t.fare},0);
+  $('#weekSpend').textContent=total.toLocaleString('en-IN');
+  $('#weekTrips').textContent=state.trips.length;
+  $('#tripsCount').textContent=state.trips.length+' trips · '+inr(total)+' spent';
+  var pace=total*4;
+  $('#passPace').textContent=pace>=1050?'₹'+pace.toLocaleString('en-IN')+'/mo — pass wins':inr(pace)+'/mo pace';
+  var html='';
+  state.trips.forEach(function(t,i){
+    html+='<tr><td>'+esc(t.day)+'</td><td>'+esc(t.routeNo)+'</td><td>'+esc(t.from)+' → '+esc(t.to)+'</td><td class="r">'+inr(t.fare)+'</td><td class="r"><button class="star" data-deltrip="'+i+'" title="Delete trip" aria-label="Delete trip" style="color:var(--red);font-size:16px">×</button></td></tr>';
+  });
+  if(!state.trips.length)html='<tr><td colspan="5" style="text-align:center;color:var(--ink2)">No trips logged yet. Log one below and the week total starts counting.</td></tr>';
+  $('#tripRows').innerHTML=html;
+}
+
+/* ---- news + guides ---- */
+function renderNews(){
+  $('#newsGrid').innerHTML=NEWS.map(function(n){
+    return '<article><span class="tag">'+esc(n.tag)+'</span><h3>'+esc(n.title)+'</h3><p>'+esc(n.body)+'</p><div class="when">'+esc(n.when)+'</div></article>';
+  }).join('');
+}
+function renderGuides(){
+  $('#guideGrid').innerHTML=GUIDES.map(function(g,i){
