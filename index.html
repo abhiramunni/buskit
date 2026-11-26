@@ -487,3 +487,53 @@ var ROUTES=[
  {no:'210A',type:'ordinary',from:'Majestic',to:'Bannerghatta',km:22,mins:75,freq:25,first:330,last:1350,stops:[['Majestic',0],['KR Market',3],['South End Circle',5.5],['Jayanagar 4th Block',7.5],['BTM Layout',10],['Bannerghatta Road',15],['Bannerghatta',22]]},
  {no:'504',type:'ordinary',from:'Jayanagar 4th Block',to:'Hebbal',km:16,mins:60,freq:15,first:330,last:1350,stops:[['Jayanagar 4th Block',0],['South End Circle',2],['KR Market',4.5],['Shivajinagar',6.5],['Ulsoor',9],['Mekhri Circle',13],['Hebbal',16]]},
  {no:'401K',type:'ordinary',from:'Yelahanka',to:'Electronic City',km:34,mins:120,freq:30,first:330,last:1350,stops:[['Yelahanka',0],['Hebbal',7],['Mekhri Circle',10],['Shivajinagar',14],['KR Market',16.5],['South End Circle',19],['BTM Layout',21.5],['Silk Board',23],['HSR Layout',25.5],['Electronic City',34]]},
+ {no:'KIAS-8',type:'airport',from:'Majestic',to:'KIA Airport',km:34,mins:75,freq:30,first:270,last:1410,stops:[['Majestic',0],['Mekhri Circle',6],['Hebbal',9],['Yelahanka',16],['KIA Airport',34]]}
+];
+var STOPS=[];ROUTES.forEach(function(r){r.stops.forEach(function(s){if(STOPS.indexOf(s[0])<0)STOPS.push(s[0])})});STOPS.sort();
+function routeByNo(no){for(var i=0;i<ROUTES.length;i++)if(ROUTES[i].no===no)return ROUTES[i];return null}
+function stopIdx(r,name){for(var i=0;i<r.stops.length;i++)if(r.stops[i][0]===name)return i;return -1}
+function legOn(r,from,to){
+  var a=stopIdx(r,from),b=stopIdx(r,to);
+  if(a<0||b<0)return null;
+  var km=Math.abs(r.stops[b][1]-r.stops[a][1]);
+  return {route:r,from:from,to:to,km:km,mins:Math.max(4,Math.round(r.mins*km/r.km)),stops:Math.abs(b-a),fare:fareFor(km,r.type)};
+}
+function typeLabel(t){return t==='ordinary'?'Ordinary':t==='vajra'?'Vajra AC':'Vayu Vajra'}
+function nextDeparture(r,now){
+  if(now<r.first)return {at:r.first,inMin:r.first-now,first:true};
+  if(now>r.last)return null;
+  var n=r.first+Math.ceil((now-r.first)/r.freq)*r.freq;
+  if(n>r.last)return null;
+  return {at:n,inMin:n-now,first:false};
+}
+function findRoutes(from,to){
+  if(from===to)return [];
+  var direct=[],change=[];
+  ROUTES.forEach(function(r){
+    var leg=legOn(r,from,to);
+    if(leg)direct.push({kind:'direct',legs:[leg],km:leg.km,mins:leg.mins,fare:leg.fare});
+  });
+  if(direct.length===0){
+    ROUTES.forEach(function(a){
+      if(stopIdx(a,from)<0)return;
+      ROUTES.forEach(function(b){
+        if(a===b||stopIdx(b,to)<0)return;
+        a.stops.forEach(function(s){
+          var name=s[0];
+          if(name===from||name===to)return;
+          if(stopIdx(b,name)<0)return;
+          var l1=legOn(a,from,name),l2=legOn(b,name,to);
+          if(!l1||!l2)return;
+          change.push({kind:'change',via:name,legs:[l1,l2],km:l1.km+l2.km,mins:l1.mins+l2.mins+5,fare:l1.fare+l2.fare});
+        });
+      });
+    });
+  }
+  var list=direct.length?direct:change;
+  list.sort(function(x,y){return x.mins-y.mins||x.fare-y.fare});
+  return list.slice(0,3);
+}
+
+var NEWS=[
+ {tag:'Fleet',title:'200 mini-buses are coming for Metro feeders',body:'BMTC has invited bids for 200 smaller buses — 100 seven-metre and 100 eleven-metre — to run as Metro feeders and on narrow roads where big buses struggle. All 200 will carry ticket validators for digital payments.',when:'Moneycontrol · 25 Nov 2026'},
+ {tag:'Fares',title:'Bus fares up: minimum ₹10, maximum ₹45',body:'Karnataka raised fares across its transport corporations from 5 November — BMTC fares up about 33–35%. The minimum ordinary fare is now ₹10 (was ₹6) and the most you pay on a city bus is ₹45.',when:'Nov 2026 · fare hike in force'},
