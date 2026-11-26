@@ -701,3 +701,51 @@ function renderNews(){
 }
 function renderGuides(){
   $('#guideGrid').innerHTML=GUIDES.map(function(g,i){
+    return '<button class="guide" data-guide="'+i+'"><h3>'+esc(g.t)+'</h3><p>'+esc(g.b)+'</p><div class="go">Read the short version →</div></button>';
+  }).join('');
+}
+
+/* ---- sheets ---- */
+function openSheet(html){
+  closeSheet();
+  var bg=document.createElement('div');bg.className='sheet-bg';bg.id='sheetBg';
+  bg.innerHTML='<div class="sheet" role="dialog" aria-modal="true">'+html+'</div>';
+  bg.addEventListener('click',function(e){if(e.target===bg)closeSheet();});
+  document.body.appendChild(bg);
+}
+function closeSheet(){var b=$('#sheetBg');if(b)b.remove();}
+function openRoute(no){
+  var r=routeByNo(no);if(!r)return;
+  var rows=r.stops.map(function(s){
+    return '<li><span class="dot"></span><span>'+esc(s[0])+'</span><b>'+s[1]+' km</b></li>';
+  }).join('');
+  openSheet('<button class="x" data-close aria-label="Close">×</button>'
+    +'<h3>Route '+esc(r.no)+' · '+esc(r.from)+' ↔ '+esc(r.to)+'</h3>'
+    +'<p class="muted small">'+esc(typeLabel(r.type))+' · '+r.km+' km · ~'+r.mins+' min end to end · every '+r.freq+' min</p>'
+    +'<div style="margin-top:10px"><div class="rowline"><span>First bus</span><b>'+fmtTime(r.first)+'</b></div>'
+    +'<div class="rowline"><span>Last bus</span><b>'+fmtTime(r.last)+'</b></div>'
+    +'<div class="rowline"><span>Full-journey fare</span><b>'+inr(fareFor(r.km,r.type))+'</b></div>'
+    +'<div class="rowline"><span>Stops</span><b>'+r.stops.length+'</b></div></div>'
+    +'<ul class="stoplist">'+rows+'</ul>'
+    +'<p class="small muted" style="margin-top:12px">Stops and timings are indicative. The board at the stop and the BMTC app are the final word.</p>');
+}
+function openGuide(i){
+  var g=GUIDES[i];if(!g)return;
+  openSheet('<button class="x" data-close aria-label="Close">×</button><h3>'+esc(g.t)+'</h3><p style="margin-top:10px">'+esc(g.b)+'</p><p style="margin-top:10px">'+esc(g.d)+'</p>');
+}
+
+/* ---- summary ---- */
+function buildSummary(){
+  var total=state.trips.reduce(function(a,t){return a+t.fare},0);
+  var lines=['My BusKit summary — Bengaluru bus'];
+  lines.push('Home stop: '+state.homeStop);
+  lines.push('Trips this week: '+state.trips.length+' · spent '+inr(total));
+  state.saved.forEach(function(s){lines.push('Saved: '+s.from+' → '+s.to+' ('+s.routeNo+')');});
+  lines.push('Day pass ₹70 · Monthly pass ₹1,050 · Ordinary fare ₹10–₹45');
+  return lines.join('\n');
+}
+
+/* ---- onboarding coach ---- */
+var COACH=[
+ {t:'Start at the board',b:'The black board shows the next bus from your stop, live from your clock. Tap any row to see every stop on that route.'},
+ {t:'Then find any route',b:'Type where you are and where you are going. BusKit finds the direct bus — or the one change that gets you there fastest — with the fare.'},
