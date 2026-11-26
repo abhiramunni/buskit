@@ -550,3 +550,52 @@ var GUIDES=[
 
 /* ---- state ---- */
 function seedTrips(){return [
+ {day:'Mon',routeNo:'15E',from:'BTM Layout',to:'Majestic',fare:30,sample:true},
+ {day:'Mon',routeNo:'15E',from:'Majestic',to:'BTM Layout',fare:30,sample:true},
+ {day:'Tue',routeNo:'505',from:'BTM Layout',to:'Shivajinagar',fare:35,sample:true},
+ {day:'Tue',routeNo:'505',from:'Shivajinagar',to:'BTM Layout',fare:35,sample:true},
+ {day:'Wed',routeNo:'201E',from:'BTM Layout',to:'Electronic City',fare:30,sample:true},
+ {day:'Wed',routeNo:'201E',from:'Electronic City',to:'BTM Layout',fare:30,sample:true},
+ {day:'Thu',routeNo:'500D',from:'BTM Layout',to:'Koramangala',fare:15,sample:true},
+ {day:'Thu',routeNo:'500D',from:'Koramangala',to:'BTM Layout',fare:15,sample:true}
+];}
+function seedSaved(){return [
+ {from:'BTM Layout',to:'Majestic',routeNo:'15E'},
+ {from:'BTM Layout',to:'Electronic City',routeNo:'201E'},
+ {from:'BTM Layout',to:'Hebbal',routeNo:'500D'}
+];}
+function defaultState(){return {homeStop:'BTM Layout',saved:seedSaved(),trips:seedTrips(),samples:true,seenCoach:false};}
+var state;
+try{state=JSON.parse(localStorage.getItem(LS_KEY))||defaultState();}catch(e){state=defaultState();}
+if(!state.saved)state=defaultState();
+function save(){try{localStorage.setItem(LS_KEY,JSON.stringify(state));}catch(e){}}
+function toast(msg){var t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);setTimeout(function(){t.remove()},2600);}
+
+/* ---- clock ---- */
+function tickClock(){
+  var d=new Date();
+  $('#clock').textContent=pad(d.getHours())+':'+pad(d.getMinutes())+' IST';
+}
+
+/* ---- departure board ---- */
+function renderBoard(){
+  var now=nowMin();
+  var home=state.homeStop;
+  var rows=ROUTES.filter(function(r){return stopIdx(r,home)>=0});
+  var html='';
+  rows.forEach(function(r){
+    var dest=stopIdx(r,home)===0?r.to:r.from;
+    var nd=nextDeparture(r,now);
+    var fare=fareFor(Math.abs(r.stops[stopIdx(r,dest)][1]-r.stops[stopIdx(r,home)][1]),r.type);
+    var nextHtml;
+    if(!nd)nextHtml='<div class="next ended"><b>Service ended</b><span>first bus '+fmtTime(r.first)+'</span></div>';
+    else if(nd.inMin===0)nextHtml='<div class="next"><b>Now</b><span>leaving now</span></div>';
+    else nextHtml='<div class="next"><b>'+nd.inMin+' min</b><span>'+fmtTime(nd.at)+(nd.first?' · first bus':'')+'</span></div>';
+    html+='<button class="brow" data-route="'+esc(r.no)+'" data-home="'+esc(home)+'">'
+      +'<span class="no">'+esc(r.no)+'<small>'+esc(typeLabel(r.type))+'</small></span>'
+      +'<span class="dest">'+esc(dest)+'<span>every '+r.freq+' min · '+fmtTime(r.first)+' – '+fmtTime(r.last)+'</span></span>'
+      +'<span class="fare">'+inr(fare)+'<span>to '+esc(dest)+'</span></span>'
+      +nextHtml+'</button>';
+  });
+  if(!rows.length)html='<div class="empty"><b>No routes serve this stop yet.</b>Pick another stop — the 27 stops in BusKit cover the main corridors.</div>';
+  $('#boardRows').innerHTML=html;
