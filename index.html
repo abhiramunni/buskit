@@ -172,3 +172,37 @@ table.log td.r,table.log th.r{text-align:right}
 .news .tag{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--terra-d)}
 .news h3{font-size:17px;line-height:1.35;margin:7px 0 6px}
 .news p{font-size:13.5px;color:var(--ink2)}
+.news .when{font-size:12px;color:var(--ink2);margin-top:9px;font-weight:600}
+.shakti{background:linear-gradient(135deg,#3a2a1a,#7a4a1e);color:#fdf6e7;border-radius:20px;padding:22px;display:grid;grid-template-columns:1.4fr 1fr;gap:20px;align-items:center;margin-top:16px}
+.shakti h3{font-size:23px;margin-bottom:6px}
+.shakti p{font-size:14.5px;color:#f0dfc0}
+.shakti .free{font-family:Fraunces,serif;font-size:44px;font-weight:900;color:#f2cd7e;line-height:1}
+.shakti .free small{font-size:15px;font-family:Inter,sans-serif;color:#f0dfc0;font-weight:600}
+/* ---------- guides ---------- */
+.guides{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.guide{border:1.5px solid var(--line);border-radius:14px;padding:16px;background:#fff;cursor:pointer;text-align:left}
+.guide:hover{border-color:var(--bronze)}
+.guide h3{font-size:16.5px;margin-bottom:5px}
+.guide p{font-size:13.5px;color:var(--ink2)}
+.guide .go{font-size:12.5px;font-weight:800;color:var(--terra-d);margin-top:8px}
+/* ---------- photo band ---------- */
+.band{margin-top:34px;border-radius:20px;overflow:hidden;position:relative}
+.band img{width:100%;height:300px;object-fit:cover;animation:kb 30s ease-in-out infinite alternate}
+.band .cap{position:absolute;left:0;right:0;bottom:0;padding:18px 22px;background:linear-gradient(180deg,transparent,rgba(20,12,6,.75));color:#fdf8ee}
+.band .cap b{font-family:Fraunces,serif;font-size:21px;display:block}
+.band .cap span{font-size:13.5px;color:#f0dfc0}
+/* ---------- sheet / modal ---------- */
+.sheet-bg{position:fixed;inset:0;background:rgba(30,20,10,.55);z-index:90;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--paper);width:min(620px,100%);max-height:86vh;overflow:auto;border-radius:22px 22px 0 0;padding:22px 22px 30px;animation:up .28s ease}
+@keyframes up{from{transform:translateY(30px);opacity:.5}to{transform:none;opacity:1}}
+.sheet h3{font-size:23px;margin-bottom:2px}
+.sheet .x{float:right;border:1.5px solid var(--line);background:#fff;width:36px;height:36px;border-radius:50%;font-size:17px}
+.stoplist{list-style:none;margin-top:14px}
+.stoplist li{display:flex;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:14.5px}
+.stoplist li b{min-width:44px;text-align:right;font-family:Fraunces,serif}
+.stoplist li .dot{width:10px;height:10px;border-radius:50%;background:var(--bronze);margin-top:6px;flex:0 0 10px}
+.sheet .rowline{display:flex;justify-content:space-between;font-size:14px;padding:8px 0;border-bottom:1px dashed var(--line)}
+/* ---------- coach ---------- */
+.coach{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:95;width:min(480px,calc(100vw - 32px));background:var(--ink);color:#fbf3e2;border-radius:18px;padding:18px 20px;box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.coach h3{font-size:18px;margin-bottom:4px}
+.coach p{font-size:14px;color:#e8d5ae}
