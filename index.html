@@ -749,3 +749,65 @@ function buildSummary(){
 var COACH=[
  {t:'Start at the board',b:'The black board shows the next bus from your stop, live from your clock. Tap any row to see every stop on that route.'},
  {t:'Then find any route',b:'Type where you are and where you are going. BusKit finds the direct bus — or the one change that gets you there fastest — with the fare.'},
+ {t:'Check the pass maths',b:'If you ride twice a day, a ₹1,050 monthly pass usually beats single tickets. The fare box does the sums for your exact habit.'}
+];
+function showCoach(step){
+  closeCoach();
+  var c=COACH[step];
+  var el=document.createElement('div');el.className='coach';el.id='coachBox';
+  el.innerHTML='<h3>Step '+(step+1)+' of 3 — '+esc(c.t)+'</h3><p>'+esc(c.b)+'</p>'
+    +'<div class="c-btns"><button class="btn ghost" id="coachSkip" style="color:#fbf3e2;border-color:rgba(251,243,226,.4)">Skip tour</button>'
+    +'<button class="btn" id="coachNext" style="background:#d9a441;color:#241a12">'+(step<2?'Next':'Got it')+'</button></div>'
+    +'<div class="dots">'+COACH.map(function(_,i){return '<i class="'+(i===step?'on':'')+'"></i>'}).join('')+'</div>';
+  document.body.appendChild(el);
+  $('#coachSkip').addEventListener('click',function(){state.seenCoach=true;save();closeCoach();});
+  $('#coachNext').addEventListener('click',function(){
+    if(step<2)showCoach(step+1);
+    else{state.seenCoach=true;save();closeCoach();}
+  });
+}
+function closeCoach(){var c=$('#coachBox');if(c)c.remove();}
+
+/* ---- intro ---- */
+function runIntro(){
+  var intro=$('#intro'),bar=$('#introBar');
+  var seen=false;try{seen=localStorage.getItem('buskit-seen')==='1';}catch(e){}
+  var dur=seen?900:3400;
+  var t0=Date.now();
+  var iv=setInterval(function(){
+    var p=Math.min(1,(Date.now()-t0)/dur);
+    if(bar)bar.style.width=Math.round(p*100)+'%';
+    if(p>=1){clearInterval(iv);finish();}
+  },60);
+  function finish(){
+    if(!intro||intro.classList.contains('gone'))return;
+    intro.classList.add('gone');
+    try{localStorage.setItem('buskit-seen','1');}catch(e){}
+    setTimeout(function(){if(intro)intro.remove();},700);
+    if(!state.seenCoach)setTimeout(function(){showCoach(0)},500);
+  }
+  intro.addEventListener('click',function(){clearInterval(iv);finish();});
+}
+
+/* ---- wiring ---- */
+function fillStops(){
+  var opts=STOPS.map(function(s){return '<option>'+esc(s)+'</option>'}).join('');
+  $('#homeStop').innerHTML=opts;
+  $('#fromStop').innerHTML=opts;
+  $('#toStop').innerHTML=opts;
+  $('#homeStop').value=state.homeStop;
+  $('#fromStop').value='BTM Layout';
+  $('#toStop').value='Majestic';
+  var routes=ROUTES.map(function(r){return '<option value="'+esc(r.no)+'">'+esc(r.no)+' · '+esc(r.from)+' → '+esc(r.to)+'</option>'}).join('');
+  $('#addTripRoute').innerHTML=routes;
+  fillTripDir();
+}
+function fillTripDir(){
+  var r=routeByNo($('#addTripRoute').value);
+  if(!r)return;
+  $('#addTripDir').innerHTML='<option value="fwd">'+esc(r.from)+' → '+esc(r.to)+'</option><option value="back">'+esc(r.to)+' → '+esc(r.from)+'</option>';
+}
+function renderAll(){
+  tickClock();renderBoard();renderFinder();renderFare();renderPass();renderSaved();renderTrips();renderNews();renderGuides();
+}
+function wire(){
