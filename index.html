@@ -256,3 +256,54 @@ footer .btn{margin-top:4px}
 <header class="top">
   <div class="wrap top-in">
     <a class="logo" href="#top">
+      <span class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="13" rx="3" fill="#fdf6e7"/><rect x="4.5" y="7" width="4" height="4" rx="1" fill="#2b2118"/><rect x="10" y="7" width="4" height="4" rx="1" fill="#2b2118"/><rect x="15.5" y="7" width="4" height="4" rx="1" fill="#2b2118"/><circle cx="7.5" cy="18.5" r="2" fill="#fdf6e7"/><circle cx="16.5" cy="18.5" r="2" fill="#fdf6e7"/></svg></span>
+      <span><b>BusKit</b><span>Bengaluru bus, sorted</span></span>
+    </a>
+    <nav aria-label="Sections">
+      <a href="#board">Departures</a><a href="#finder">Find a route</a><a href="#fares">Fares</a><a href="#saved">Saved</a><a href="#news">News</a><a href="#guides">Guides</a>
+    </nav>
+    <span class="clock" id="clock" title="Live time, Asia/Kolkata">--:--</span>
+  </div>
+</header>
+
+<main id="top">
+  <!-- hero -->
+  <div class="wrap">
+    <div class="hero">
+      <img src="buskit-hero.webp" alt="A blue and white Bengaluru city bus at a tree-lined bus shelter in golden-hour light" fetchpriority="high">
+      <div class="shade"></div>
+      <div class="copy">
+        <span class="kicker">BMTC · Bengaluru · Nov 2026 fares</span>
+        <h1>Never miss the bus. Never overpay for it.</h1>
+        <p>Next departures from your stop, the honest fare before you board, and whether a pass beats single tickets — all in plain words.</p>
+        <div class="chips"><span class="chip">12 routes · 27 stops</span><span class="chip">Fares from ₹10</span><span class="chip">Day pass ₹70</span><span class="chip">Shakti: free for women</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- departure board -->
+  <section class="block" id="board">
+    <div class="wrap">
+      <div class="sec-head"><h2>The departure board</h2><span class="count">live from your clock · tap a row for every stop</span></div>
+      <p class="sec-sub">Times are the published timetable for each route — first bus, last bus, and how often one comes. Traffic can add minutes; leave a little early in the evening rush.</p>
+      <div class="board">
+        <div class="board-head">
+          <span class="dot" aria-hidden="true"></span>
+          <h3>Next buses from</h3>
+          <span class="live">LIVE</span>
+          <select id="homeStop" aria-label="Your home stop"></select>
+        </div>
+        <div class="board-rows" id="boardRows"></div>
+        <div class="board-foot">
+          <span>First bus <b>5:30 AM</b> · last bus <b>10:30 PM</b> on most routes</span>
+          <span>Airport buses run <b>4:30 AM – 11:30 PM</b></span>
+          <span id="boardNote"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- route finder -->
+  <section class="block" id="finder">
+    <div class="wrap">
+      <div class="sec-head"><h2>Find a route</h2><span class="count">direct first, one change if needed</span></div>
