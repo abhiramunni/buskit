@@ -385,3 +385,44 @@ footer .btn{margin-top:4px}
     <div class="wrap">
       <div class="sec-head"><h2>My trips this week</h2><span class="count" id="tripsCount"></span></div>
       <p class="sec-sub">Log each ride and BusKit keeps the week's spend. It is the fastest way to see whether that monthly pass is actually saving you money.</p>
+      <div class="card panel" style="padding:0">
+        <div style="padding:16px 20px 0;display:flex;gap:18px;flex-wrap:wrap">
+          <div><div class="small muted">Spent this week</div><div style="font-family:Fraunces,serif;font-size:30px;font-weight:900">₹<span id="weekSpend">0</span></div></div>
+          <div><div class="small muted">Trips logged</div><div style="font-family:Fraunces,serif;font-size:30px;font-weight:900"><span id="weekTrips">0</span></div></div>
+          <div><div class="small muted">vs monthly pass pace</div><div style="font-family:Fraunces,serif;font-size:30px;font-weight:900" id="passPace">—</div></div>
+        </div>
+        <div class="logwrap"><table class="log"><thead><tr><th>Day</th><th>Route</th><th>Trip</th><th class="r">Fare</th><th></th></tr></thead><tbody id="tripRows"></tbody></table></div>
+        <div style="padding:16px 20px;border-top:1px solid var(--line)">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <select id="addTripRoute" aria-label="Route for new trip" style="flex:2;min-width:180px;padding:11px 12px;border:1.5px solid var(--line);border-radius:12px;font-weight:600"></select>
+            <select id="addTripDir" aria-label="Direction" style="flex:1;min-width:140px;padding:11px 12px;border:1.5px solid var(--line);border-radius:12px;font-weight:600"></select>
+            <button class="btn small" id="addTripBtn">Log this trip</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- news -->
+  <section class="block" id="news">
+    <div class="wrap">
+      <div class="sec-head"><h2>Bus news, this week</h2><span class="count">what changed for riders</span></div>
+      <p class="sec-sub">Three things from the news that actually affect your ride — not the politics around them.</p>
+      <div class="news" id="newsGrid"></div>
+      <div class="shakti">
+        <div>
+          <h3>Shakti: free bus travel for women</h3>
+          <p>Women with a Karnataka domicile travel free on ordinary BMTC and KSRTC buses inside the state — show a valid Karnataka ID (Aadhaar, voter ID or driving licence). Vajra AC and airport buses are not free. Since 25 November, buses are also meant to carry only as many passengers as there are seats, so expect fuller — but calmer — buses at rush hour.</p>
+        </div>
+        <div style="text-align:center">
+          <div class="free">₹0 <small>for women, ordinary buses</small></div>
+          <p style="margin-top:8px;font-size:13px">Check the fare box above — Shakti riders pay nothing on ordinary routes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- guides -->
+  <section class="block" id="guides">
+    <div class="wrap">
+      <div class="sec-head"><h2>Guides, in plain words</h2><span class="count">tap one to read it</span></div>
