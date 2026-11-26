@@ -811,3 +811,54 @@ function renderAll(){
   tickClock();renderBoard();renderFinder();renderFare();renderPass();renderSaved();renderTrips();renderNews();renderGuides();
 }
 function wire(){
+  $('#homeStop').addEventListener('change',function(){state.homeStop=this.value;save();renderBoard();});
+  $('#swapBtn').addEventListener('click',function(){
+    var a=$('#fromStop').value;$('#fromStop').value=$('#toStop').value;$('#toStop').value=a;renderFinder();
+  });
+  $('#findBtn').addEventListener('click',renderFinder);
+  $('#fromStop').addEventListener('change',renderFinder);
+  $('#toStop').addEventListener('change',renderFinder);
+  $('#whenSel').addEventListener('change',renderFinder);
+  $$('#fareSeg button').forEach(function(b){
+    b.addEventListener('click',function(){
+      $$('#fareSeg button').forEach(function(x){x.classList.remove('on')});
+      b.classList.add('on');fareType=b.getAttribute('data-t');renderFare();
+    });
+  });
+  $('#distRange').addEventListener('input',renderFare);
+  $('#tripsRange').addEventListener('input',renderPass);
+  $('#avgFareRange').addEventListener('input',renderPass);
+  $('#addTripRoute').addEventListener('change',fillTripDir);
+  $('#addTripBtn').addEventListener('click',function(){
+    var r=routeByNo($('#addTripRoute').value);if(!r)return;
+    var fwd=$('#addTripDir').value==='fwd';
+    var from=fwd?r.from:r.to,to=fwd?r.to:r.from;
+    var days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+    state.trips.push({day:days[new Date().getDay()],routeNo:r.no,from:from,to:to,fare:fareFor(r.km,r.type),sample:false});
+    save();renderTrips();toast('Trip logged — '+inr(fareFor(r.km,r.type)));
+  });
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    var brow=t.closest? t.closest('.brow'):null;
+    if(brow){openRoute(brow.getAttribute('data-route'));return;}
+    var sv=t.closest? t.closest('[data-save]'):null;
+    if(sv){
+      var parts=sv.getAttribute('data-save').split('|');
+      state.saved.push({routeNo:parts[0],from:parts[1],to:parts[2]});
+      save();renderSaved();toast('Route saved');return;
+    }
+    var un=t.closest? t.closest('[data-unsave]'):null;
+    if(un){state.saved.splice(parseInt(un.getAttribute('data-unsave'),10),1);save();renderSaved();return;}
+    var dt=t.closest? t.closest('[data-deltrip]'):null;
+    if(dt){state.trips.splice(parseInt(dt.getAttribute('data-deltrip'),10),1);save();renderTrips();return;}
+    var or=t.closest? t.closest('[data-open-route]'):null;
+    if(or){openRoute(or.getAttribute('data-open-route'));return;}
+    var gd=t.closest? t.closest('[data-guide]'):null;
+    if(gd){openGuide(parseInt(gd.getAttribute('data-guide'),10));return;}
+    if(t.closest&&t.closest('[data-close]'))closeSheet();
+  });
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSheet();});
+  $('#copyBtn').addEventListener('click',function(){
+    var txt=buildSummary();
+    function done(){toast('Summary copied');}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,function(){fallbackCopy(txt);done();});}
