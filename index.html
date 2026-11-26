@@ -307,3 +307,42 @@ footer .btn{margin-top:4px}
   <section class="block" id="finder">
     <div class="wrap">
       <div class="sec-head"><h2>Find a route</h2><span class="count">direct first, one change if needed</span></div>
+      <p class="sec-sub">Pick where you are and where you are going. BusKit checks all 12 routes and shows the quickest ways there — with the fare, the distance and where to change, if you have to.</p>
+      <div class="card finder">
+        <div class="side">
+          <div class="swaprow">
+            <div class="field"><label for="fromStop">From</label><select id="fromStop"></select></div>
+            <button class="swap" id="swapBtn" title="Swap from and to" aria-label="Swap from and to"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v13M7 17l-3-3M7 17l3-3M17 20V7M17 7l-3 3M17 7l3 3"/></svg></button>
+            <div class="field"><label for="toStop">To</label><select id="toStop"></select></div>
+          </div>
+          <div class="field"><label for="whenSel">When are you travelling?</label>
+            <select id="whenSel"><option value="now">Right now</option><option value="peak">Morning rush (8–10 AM)</option><option value="evening">Evening rush (5–8 PM)</option><option value="night">Late evening (after 9 PM)</option></select>
+          </div>
+          <button class="btn terra block" id="findBtn">Find my bus</button>
+          <p class="small muted" style="margin-top:10px">Rush hours add roughly 25% to the time shown. Fares are the November 2026 BMTC slabs — indicative; the conductor's ticket is the final word.</p>
+        </div>
+        <div class="side">
+          <div class="results" id="findResults"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- fare calculator + pass maths -->
+  <section class="block" id="fares">
+    <div class="wrap">
+      <div class="sec-head"><h2>Fares &amp; passes</h2><span class="count">November 2026 slabs, after the hike</span></div>
+      <p class="sec-sub">The minimum fare is now ₹10 and the most you pay on an ordinary city bus is ₹45. Work out any trip, then see whether a pass beats buying tickets one by one.</p>
+      <div class="split">
+        <div class="card panel">
+          <h3>What will this trip cost?</h3>
+          <p class="sub">Slide to your distance. The fare follows the BMTC stage slabs.</p>
+          <div class="seg" id="fareSeg" role="group" aria-label="Service type">
+            <button data-t="ordinary" class="on">Ordinary</button>
+            <button data-t="vajra">Vajra AC</button>
+            <button data-t="airport">Airport (Vayu Vajra)</button>
+          </div>
+          <label class="small muted" for="distRange">Distance</label>
+          <div class="range-val"><span id="distVal">10</span> <small>km</small></div>
+          <input type="range" id="distRange" min="1" max="35" step="1" value="10" aria-label="Distance in kilometres">
+          <div class="fare-out">
