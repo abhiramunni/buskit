@@ -426,3 +426,53 @@ footer .btn{margin-top:4px}
   <section class="block" id="guides">
     <div class="wrap">
       <div class="sec-head"><h2>Guides, in plain words</h2><span class="count">tap one to read it</span></div>
+      <p class="sec-sub">Six short explainers for the questions everyone asks standing at a bus stop.</p>
+      <div class="guides" id="guideGrid"></div>
+      <div class="band">
+        <img src="buskit-flatlay.webp" alt="A bus day pass, paper tickets, a phone showing a bus route map and a steel tumbler of filter coffee on a wooden desk" loading="lazy">
+        <div class="cap"><b>The ₹70 day pass, explained.</b><span>One ordinary day pass covers every ordinary bus you ride that day — two ₹35 trips and it has already paid for itself.</span></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="row">
+      <b style="font-family:Fraunces,serif;font-size:17px;color:var(--ink)">BusKit</b>
+      <span>Routes, fares and timings are indicative November 2026 figures for planning — always check the BMTC app or the board at the stop before you travel.</span>
+    </div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn ghost small" id="copyBtn">Copy my bus summary</button>
+      <button class="btn ghost small" id="removeSamplesBtn">Remove sample trips</button>
+      <button class="btn ghost small" id="eraseBtn">Erase everything</button>
+    </div>
+    <p style="margin-top:14px">Made for Bengaluru riders. All data stays on your device — no account, no tracking.</p>
+  </div>
+</footer>
+
+<noscript><p style="text-align:center;padding:20px">BusKit needs JavaScript to find routes and fares. Please enable it and reload.</p></noscript>
+<script>
+'use strict';
+/* ================= BusKit ================= */
+var LS_KEY='buskit-v1';
+function $(s){return document.querySelector(s)}
+function $$(s){return Array.prototype.slice.call(document.querySelectorAll(s))}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function inr(n){return '₹'+Number(n).toLocaleString('en-IN')}
+function pad(n){return (n<10?'0':'')+n}
+function fmtTime(min){var h=Math.floor(min/60),m=min%60,ap=h>=12?'PM':'AM';h=h%12;if(h===0)h=12;return h+':'+pad(m)+' '+ap}
+function nowMin(){var d=new Date();return d.getHours()*60+d.getMinutes()}
+function safeScroll(el){try{if(el&&el.scrollIntoView)el.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){}}
+
+/* ---- fare table: BMTC ordinary slabs, Nov 2026 (indicative) ---- */
+function fareFor(km,type){
+  if(type==='airport')return 250;
+  var f=km<=2?10:km<=4?15:km<=6?20:km<=8?25:km<=10?30:km<=12?35:km<=15?40:45;
+  if(type==='vajra')return Math.min(90,f*2);
+  return f;
+}
+function stageLabel(km){return km<=2?'0–2 km slab':km<=4?'2–4 km slab':km<=6?'4–6 km slab':km<=8?'6–8 km slab':km<=10?'8–10 km slab':km<=12?'10–12 km slab':km<=15?'12–15 km slab':'15+ km slab'}
+
+/* ---- routes: stops are [name, cumulative km] in one direction; buses run both ways ---- */
+var ROUTES=[
