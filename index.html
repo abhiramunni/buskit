@@ -346,3 +346,42 @@ footer .btn{margin-top:4px}
           <div class="range-val"><span id="distVal">10</span> <small>km</small></div>
           <input type="range" id="distRange" min="1" max="35" step="1" value="10" aria-label="Distance in kilometres">
           <div class="fare-out">
+            <div><div class="small muted">One-way fare</div><div class="big">₹<span id="fareOut">30</span> <small id="fareNote">ordinary · 10 km</small></div></div>
+            <div style="text-align:right"><div class="small muted">Return, same day</div><div style="font-weight:800;font-size:19px">₹<span id="fareReturn">60</span></div></div>
+          </div>
+          <div class="statline"><span>Stage</span><b id="fareStage">8–10 km slab</b></div>
+          <div class="statline"><span>Day pass pays off if you spend</span><b>₹70 or more today</b></div>
+        </div>
+        <div class="card panel">
+          <h3>Is a pass worth it for you?</h3>
+          <p class="sub">Tell BusKit how much you ride, and it does the pass maths.</p>
+          <label class="small muted" for="tripsRange">Bus trips on a normal day</label>
+          <div class="range-val"><span id="tripsVal">2</span> <small>trips / day</small></div>
+          <input type="range" id="tripsRange" min="1" max="6" step="1" value="2" aria-label="Trips per day">
+          <label class="small muted" for="avgFareRange">Average fare each trip</label>
+          <div class="range-val">₹<span id="avgFareVal">30</span></div>
+          <input type="range" id="avgFareRange" min="10" max="45" step="5" value="30" aria-label="Average fare per trip">
+          <div class="statline"><span>Single tickets, 26 working days</span><b>₹<span id="singlesOut">1,560</span></b></div>
+          <div class="statline"><span>Day passes, 26 days × ₹70</span><b>₹<span id="dayPassOut">1,820</span></b></div>
+          <div class="statline"><span>Monthly pass (ordinary)</span><b>₹1,050</b></div>
+          <div class="statline"><span>Best for you</span><b class="win" id="passVerdict">Monthly pass — saves ₹510</b></div>
+          <p class="small muted" style="margin-top:10px">Pass prices are indicative November 2026 figures. The monthly pass is a flat ₹1,050 for ordinary services; Vajra monthly is higher. Students and senior citizens have separate concessions — ask at the bus station counter.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- saved routes -->
+  <section class="block" id="saved">
+    <div class="wrap">
+      <div class="sec-head"><h2>Your routes</h2><span class="count">star the ones you ride every day</span></div>
+      <p class="sec-sub">One tap opens a route with its fare and next bus. Save any result from the finder above and it lands here.</p>
+      <div class="rail" id="savedRail"></div>
+    </div>
+  </section>
+
+  <!-- my trips -->
+  <section class="block" id="trips">
+    <div class="wrap">
+      <div class="sec-head"><h2>My trips this week</h2><span class="count" id="tripsCount"></span></div>
+      <p class="sec-sub">Log each ride and BusKit keeps the week's spend. It is the fastest way to see whether that monthly pass is actually saving you money.</p>
